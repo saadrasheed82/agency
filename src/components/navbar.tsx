@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Terminal, Menu, X, Shield } from "lucide-react";
+import { Terminal, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -90,91 +90,65 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Right cluster: admin + mobile */}
-        <div className="flex items-center gap-2">
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="hidden border border-border/70 text-silver hover:border-neon/50 hover:text-neon hover:bg-neon/5 sm:flex"
-          >
-            <Link href="/login">
-              <Shield className="size-3.5" />
-              <span className="font-mono text-xs uppercase tracking-[0.18em]">
-                Admin
-              </span>
-            </Link>
-          </Button>
-
-          {/* Mobile sheet */}
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden border border-border/70 text-foreground hover:border-neon/50 hover:text-neon"
-                aria-label="Open navigation menu"
-              >
-                <Menu className="size-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[280px] border-border/70 bg-black p-0"
+        {/* Mobile sheet */}
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden border border-border/70 text-foreground hover:border-neon/50 hover:text-neon"
+              aria-label="Open navigation menu"
             >
-              <SheetTitle className="sr-only">Navigation menu</SheetTitle>
-              <div className="flex h-16 items-center justify-between border-b border-border/70 px-4">
-                <span className="font-display text-sm font-extrabold uppercase tracking-[0.2em]">
-                  Menu<span className="text-neon">_</span>
-                </span>
-                <SheetClose asChild>
-                  <Button variant="ghost" size="icon" aria-label="Close menu">
-                    <X className="size-5" />
-                  </Button>
-                </SheetClose>
-              </div>
-              <nav className="flex flex-col p-2">
-                {NAV_LINKS.map((link) => {
-                  const active = isActive(link.href);
-                  return (
-                    <SheetClose asChild key={link.href}>
-                      <Link
-                        href={link.href}
-                        className={cn(
-                          "flex items-center justify-between border-l-2 px-4 py-4 transition-colors",
-                          active
-                            ? "border-neon bg-neon/5 text-neon"
-                            : "border-transparent text-foreground hover:border-neon/40 hover:bg-neon/5"
-                        )}
-                      >
-                        <span className="flex items-baseline gap-3">
-                          <span className="font-mono text-[10px] text-muted-foreground">
-                            {link.code}
-                          </span>
-                          <span className="font-sans text-sm font-semibold">
-                            {link.label}
-                          </span>
+              <Menu className="size-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="w-[280px] border-border/70 bg-black p-0"
+          >
+            <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+            <div className="flex h-16 items-center justify-between border-b border-border/70 px-4">
+              <span className="font-display text-sm font-extrabold uppercase tracking-[0.2em]">
+                Menu<span className="text-neon">_</span>
+              </span>
+              <SheetClose asChild>
+                <Button variant="ghost" size="icon" aria-label="Close menu">
+                  <X className="size-5" />
+                </Button>
+              </SheetClose>
+            </div>
+            <nav className="flex flex-col p-2">
+              {NAV_LINKS.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <SheetClose asChild key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "flex items-center justify-between border-l-2 px-4 py-4 transition-colors",
+                        active
+                          ? "border-neon bg-neon/5 text-neon"
+                          : "border-transparent text-foreground hover:border-neon/40 hover:bg-neon/5"
+                      )}
+                    >
+                      <span className="flex items-baseline gap-3">
+                        <span className="font-mono text-[10px] text-muted-foreground">
+                          {link.code}
                         </span>
-                        <span className="font-mono text-xs text-muted-foreground">
-                          →
+                        <span className="font-sans text-sm font-semibold">
+                          {link.label}
                         </span>
-                      </Link>
-                    </SheetClose>
-                  );
-                })}
-                <SheetClose asChild>
-                  <Link
-                    href="/login"
-                    className="mt-2 flex items-center gap-2 border border-border/70 px-4 py-3 font-mono text-xs uppercase tracking-[0.18em] text-silver transition-colors hover:border-neon/50 hover:text-neon"
-                  >
-                    <Shield className="size-3.5" />
-                    Admin Access
-                  </Link>
-                </SheetClose>
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
+                      </span>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        →
+                      </span>
+                    </Link>
+                  </SheetClose>
+                );
+              })}
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
       {/* Status strip */}
       <div className="hidden items-center gap-4 border-t border-border/50 bg-black/60 px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground lg:flex">
