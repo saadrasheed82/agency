@@ -99,7 +99,7 @@ export function PromptsExplorer({ prompts }: { prompts: Prompt[] }) {
         </span>
         <span className="flex items-center gap-1.5">
           <Hash className="size-3" />
-          click card to expand raw payload
+          click card to open full prompt
         </span>
       </div>
 

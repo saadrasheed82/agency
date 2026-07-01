@@ -1,15 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {
-  Copy,
-  Check,
-  ChevronDown,
-  Hash,
-  Terminal,
-} from "lucide-react";
+import Link from "next/link";
+import { Copy, Check, Hash, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CodeBlock } from "@/components/code-block";
 import { CATEGORY_META, isPromptCategory } from "@/lib/prompts";
 import { CornerTicks } from "@/components/ui-primitives";
 
@@ -23,7 +17,6 @@ export interface Prompt {
 }
 
 export function PromptCard({ prompt }: { prompt: Prompt }) {
-  const [expanded, setExpanded] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
 
   const category = isPromptCategory(prompt.category)
@@ -31,36 +24,34 @@ export function PromptCard({ prompt }: { prompt: Prompt }) {
     : "Vibe Coding";
   const meta = CATEGORY_META[category];
 
-  const copy = React.useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(prompt.payload);
-    } catch {
-      const ta = document.createElement("textarea");
-      ta.value = prompt.payload;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.select();
+  const copy = React.useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
       try {
-        document.execCommand("copy");
+        await navigator.clipboard.writeText(prompt.payload);
       } catch {
-        /* noop */
+        const ta = document.createElement("textarea");
+        ta.value = prompt.payload;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+        } catch {
+          /* noop */
+        }
+        document.body.removeChild(ta);
       }
-      document.body.removeChild(ta);
-    }
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
-  }, [prompt.payload]);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    },
+    [prompt.payload]
+  );
 
   return (
-    <div
-      className={cn(
-        "group relative flex flex-col border bg-card/60 transition-all",
-        expanded
-          ? "border-neon/50 glow-neon-sm"
-          : "border-border/70 hover:border-neon/40"
-      )}
-    >
+    <div className="group relative flex flex-col border border-border/70 bg-card/60 transition-all hover:border-neon/40 hover:bg-card/80">
       <CornerTicks />
 
       {/* Header */}
@@ -86,12 +77,11 @@ export function PromptCard({ prompt }: { prompt: Prompt }) {
         </span>
       </div>
 
-      {/* Title + description */}
-      <button
-        type="button"
-        onClick={() => setExpanded((v) => !v)}
+      {/* Title + description — clickable link to detail page */}
+      <Link
+        href={`/prompts/${prompt.id}`}
         className="flex-1 px-4 text-left"
-        aria-expanded={expanded}
+        aria-label={`Open prompt: ${prompt.title}`}
       >
         <h3 className="font-display text-lg font-bold uppercase tracking-tight text-foreground group-hover:text-neon">
           {prompt.title}
@@ -99,7 +89,7 @@ export function PromptCard({ prompt }: { prompt: Prompt }) {
         <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {prompt.description}
         </p>
-      </button>
+      </Link>
 
       {/* Actions */}
       <div className="flex items-center gap-2 p-4 pt-3">
@@ -123,29 +113,15 @@ export function PromptCard({ prompt }: { prompt: Prompt }) {
             </>
           )}
         </button>
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className={cn(
-            "flex size-9 items-center justify-center border border-border/70 text-muted-foreground transition-all hover:border-neon/50 hover:text-neon",
-            expanded && "rotate-180 border-neon/50 text-neon"
-          )}
-          aria-label={expanded ? "Collapse prompt payload" : "Expand prompt payload"}
+        <Link
+          href={`/prompts/${prompt.id}`}
+          className="group/btn flex items-center justify-center gap-1.5 border border-border/70 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-all hover:border-neon/50 hover:text-neon"
+          aria-label={`View prompt details: ${prompt.title}`}
         >
-          <ChevronDown className="size-4" />
-        </button>
+          OPEN
+          <ArrowUpRight className="size-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+        </Link>
       </div>
-
-      {/* Expandable payload */}
-      {expanded && (
-        <div className="border-t border-border/60 bg-black/40 p-4">
-          <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-            <Terminal className="size-3 text-neon" />
-            raw_payload.txt
-          </div>
-          <CodeBlock code={prompt.payload} filename="raw_payload.txt" />
-        </div>
-      )}
     </div>
   );
 }

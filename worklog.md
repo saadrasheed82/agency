@@ -26,3 +26,20 @@ Stage Summary:
 - Lint: clean (0 errors). All 5 routes return 200 (admin 307 when unauthed).
 - Agent Browser verified end-to-end: home renders, prompts expand/copy/filter/search work, AI Company renders all sections, login (admin/#Saad#2005s) → /admin redirect works, admin deploy writes to DB + flashes success + appears on public /prompts instantly, admin delete removes from DB + public page, auth protection redirects unauthed /admin to /login, mobile hamburger menu works, sticky footer confirmed (gap=0 when content<viewport).
 - VLM confirmed hardcore aesthetic: dark bg + grid texture, neon orange accents, bold headline, terminal diagnostic box, dual CTA buttons, developer/terminal aesthetic.
+
+---
+Task ID: PROMPT_DETAIL_PAGE
+Agent: Z.ai Code (main)
+Task: Refactor prompts so each card opens in a separate detail page (/prompts/[id]) instead of expanding inline.
+
+Work Log:
+- Refactored PromptCard: removed inline expand/collapse; title+description now links to /prompts/[id]; footer has "COPY PROMPT" button + "OPEN →" link to detail page. Copy button uses stopPropagation so it doesn't trigger navigation.
+- Created /prompts/[id] server page: fetches prompt by id from Prisma, notFound() if missing, generateMetadata for title. Renders breadcrumb (HOME > PROMPTS > code), back link, category label, date, bold title, description, RAW_PROMPT_PAYLOAD in CodeBlock (maxHeight 40rem), action bar with CopyPromptButton, return-to-library link.
+- Created CopyPromptButton client component for the detail page.
+- Created themed not-found.tsx for invalid prompt ids (404 / SIGNAL LOST / back links).
+- Updated prompts page intro text + explorer hint ("click card to open full prompt").
+
+Stage Summary:
+- Lint clean. Routes: /prompts/[valid] → 200, /prompts/[invalid] → 404 (themed).
+- Agent Browser verified: click card → navigates to detail page, copy button shows "COPIED TO CLIPBOARD", RETURN TO LIBRARY returns to /prompts, not-found page renders, mobile (375px) detail page renders breadcrumb + back + payload.
+- VLM confirmed detail page: back link, breadcrumb, bold title, dark IDE code block with line numbers, orange copy button, hardcore developer aesthetic — all YES.

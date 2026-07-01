@@ -36,8 +36,8 @@ export default async function PromptsPage() {
           </SectionHeading>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             A dense, battle-tested arsenal of prompts for image generation,
-            video, vibe coding, and agent personas. Copy raw payloads instantly —
-            expand any card to inspect the full payload in an IDE-grade viewer.
+            video, vibe coding, and agent personas. Open any card to inspect the
+            full raw payload in an IDE-grade viewer — copy instantly.
           </p>
         </div>
       </section>
