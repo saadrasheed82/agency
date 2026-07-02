@@ -31,7 +31,6 @@ export function TerminalBox({
 
   React.useEffect(() => {
     if (!live || !lines?.length) return;
-    setVisible(0);
     let i = 0;
     const interval = setInterval(() => {
       i += 1;
