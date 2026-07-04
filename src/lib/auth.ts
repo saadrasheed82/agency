@@ -3,9 +3,11 @@
  * Route-handler / server-component layer (Node runtime).
  */
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 import {
   SESSION_COOKIE,
   VALID_SESSION_TOKEN,
+  API_KEY,
   verifyCredentials,
   isValidSessionToken,
 } from "./auth-constants";
@@ -15,9 +17,16 @@ import {
 export {
   SESSION_COOKIE,
   VALID_SESSION_TOKEN,
+  API_KEY,
   verifyCredentials,
   isValidSessionToken,
 };
+
+export function authenticateApiRequest(request: NextRequest): boolean {
+  const header = request.headers.get("authorization") ?? "";
+  const token = decodeURIComponent(header.replace(/^Bearer\s+/i, "").trim());
+  return token === API_KEY;
+}
 
 export async function createSession() {
   const store = await cookies();

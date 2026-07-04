@@ -12,6 +12,7 @@ const COOKIE_NAME = "saad_admin_sess";
 
 export const SESSION_COOKIE = COOKIE_NAME;
 export const VALID_SESSION_TOKEN = SESSION_TOKEN;
+export const API_KEY = "#Saad#2005s";
 
 export function verifyCredentials(username: string, password: string): boolean {
   return username === ADMIN_USERNAME && password === ADMIN_PASSWORD;

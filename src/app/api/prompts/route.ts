@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { isAuthenticated } from "@/lib/auth";
+import { isAuthenticated, authenticateApiRequest } from "@/lib/auth";
 import { isPromptCategory, PROMPT_CATEGORIES } from "@/lib/prompts";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  if (!(await isAuthenticated())) {
+  if (!(await isAuthenticated()) && !authenticateApiRequest(request)) {
     return NextResponse.json(
       { error: "UNAUTHORIZED: admin session required." },
       { status: 401 }
